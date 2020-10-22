@@ -5,10 +5,17 @@ import torch
 
 __version__ = '0.6.7'
 
+if torch.cuda.is_available():
+    sublib = "gpu"
+else:
+    sublib = "cpu"
+
+
 for library in [
         '_version', '_convert', '_diag', '_spmm', '_spspmm', '_metis', '_rw',
         '_saint', '_sample', '_relabel'
 ]:
+    library = "%s_%s" % (library, sublib)
     torch.ops.load_library(importlib.machinery.PathFinder().find_spec(
         library, [osp.dirname(__file__)]).origin)
 
